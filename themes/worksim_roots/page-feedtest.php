@@ -11,10 +11,35 @@ wp_head();
 ?>
 <h2><?php _e( 'Recent news from Some-Other Blog:', 'my-text-domain' ); ?></h2>
 <?php
+
+/*
 $feeds = [
     'http://swungover.wordpress.com/feed/',
     'http://awordonswing.wordpress.com/feed/',
     'http://lindyaffair.wordpress.com/feed/'];
+*/
+
+    // The Query
+    $the_query = new WP_Query( array('post_type' => array('blog'), 'publish' => 'Published' ) );
+//echo '.........'.print_r($the_query,);
+    // The Loop
+    if ( $the_query->have_posts() ) {
+        //echo '<ul>';
+        while ( $the_query->have_posts() ) {
+            $the_query->the_post();
+            $feeds[] = get_post_meta(get_the_id(), 'url')[0];
+
+        }
+        //echo '</ul>';
+    } else {
+        // no posts found
+    }
+    /* Restore original Post Data */
+    wp_reset_postdata();
+
+
+//Whippet::print_r($feeds);
+//exit();
 
 foreach($feeds as $feed) {
 
