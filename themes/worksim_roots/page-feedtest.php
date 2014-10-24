@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: My Custom Page
+Template Name: Feed Test
 */
 
 // Get RSS Feed(s)
