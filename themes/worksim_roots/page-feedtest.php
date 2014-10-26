@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Display Feeds
+Template Name: View all feeds
 */
 
 // Get RSS Feed(s)
@@ -8,16 +8,11 @@ include_once(ABSPATH . WPINC . '/feed.php');
 
 wp_head();
 
-?>
-<h2><?php _e('Recent news from Some-Other Blog:', 'my-text-domain'); ?></h2>
-<?php
 
-// The Query
+
 $the_query = new WP_Query(array('post_type' => array('blog'), 'publish' => 'Published'));
-//echo '.........'.print_r($the_query,);
-// The Loop
 if ($the_query->have_posts()) {
-    //echo '<ul>';
+
     while ($the_query->have_posts()) {
         $the_query->the_post();
         $feeds[] = get_post_meta(get_the_id(), 'url')[0];
@@ -26,10 +21,6 @@ if ($the_query->have_posts()) {
 }
 /* Restore original Post Data */
 wp_reset_postdata();
-
-
-//Whippet::print_r($feeds);
-//exit();
 
 foreach ($feeds as $feed) {
 
@@ -55,14 +46,18 @@ usort($finalArray, function ($a, $b) {
 });
 ?>
 
+<h1><?= the_title(); ?></h1>
+
+<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
+    the_content();
+endwhile; endif; ?>
 <?php if ($maxitems == 0) : ?>
-    <li><?php _e('No items', 'my-text-domain'); ?></li>
+    <p>We currently don't have any items - please check back later</p>
 <?php else : ?>
     <?php foreach ($finalArray as $item) : ?>
         <article>
             <header>
                 <h1><?= $item['title']; ?></h1>
-
                 <p><a href='<?= $item['permalink'] ?>' target='_blank'>Read the Original Post</a></p>
             </header>
             <?= $item['content'] ?>
