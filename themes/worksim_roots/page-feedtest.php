@@ -9,7 +9,6 @@ include_once(ABSPATH . WPINC . '/feed.php');
 wp_head();
 
 
-
 $the_query = new WP_Query(array('post_type' => array('blog'), 'publish' => 'Published'));
 if ($the_query->have_posts()) {
 
@@ -48,7 +47,7 @@ usort($finalArray, function ($a, $b) {
 
 <h1><?= the_title(); ?></h1>
 
-<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
+<?php if (have_posts()) : while (have_posts()) : the_post();
     the_content();
 endwhile; endif; ?>
 <?php if ($maxitems == 0) : ?>
@@ -58,6 +57,7 @@ endwhile; endif; ?>
         <article>
             <header>
                 <h1><?= $item['title']; ?></h1>
+
                 <p><a href='<?= $item['permalink'] ?>' target='_blank'>Read the Original Post</a></p>
             </header>
             <?= $item['content'] ?>
