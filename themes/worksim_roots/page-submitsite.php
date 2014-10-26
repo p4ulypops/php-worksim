@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Article Submition
+    Template Name: Blog Submission
 */
 
 wp_head();
@@ -22,6 +22,8 @@ if (isset($_POST['submit'])) {
         if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             $message['email'] = "Please provide valid email address";
         }
+
+        // URL
         if (!filter_var($_POST['url'], FILTER_VALIDATE_URL)) {
             $message['url'] = "Please provide valid URL";
         }
@@ -45,25 +47,34 @@ if (isset($_POST['submit'])) {
             update_post_meta($post_id, 'email', $_POST['email']);
             update_post_meta($post_id, 'url', $_POST['url']);
 
-            $message['thanks'] = "Thank you for submitting your blog (" . $post_id . ")";
+            $message['thanks'] = "Thank you for submitting your blog";
         } else {
             $message[] = print_r($post_id, true);
         }
 
     }
 }
+
 ?>
 
-<h1>Submit a Blog</h1>
+<h1><?= the_title(); ?></h1>
 
-<form action="" method="POST" class="submitform">
-    <label for="frmEmail">Your email address: <input type="email" id="frmEmail" name="email" required
-                                                     value="me@paul.gd"></label>
-    <label for="frmName">Your Name: <input type="text" id="frmName" name="personname" required value="John"></label>
-    <label for="frmURL">Your blog's RSS Feed: <input type="URL" id="frmURL" name="url" required
-                                                     value="http://swungover.wordpress.com/feed/"></label>
+<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
+    the_content();
+endwhile; endif; ?>
+
+<form action="" method="POST" class="submitform" role="form">
+    <div class="form-group"><label for="frmEmail">Your email address:</label> <input type="email" id="frmEmail"
+                                                                                     name="email" required
+                                                                                     value="me@paul.gd" class="form-control"></div>
+    <div class="form-group"><label for="frmName">Your Name:</label> <input type="text" id="frmName" name="personname"
+                                                                           required value="John" class="form-control"></div>
+    <div class="form-group"><label for="frmURL">Your blog's RSS Feed:</label> <input type="URL" id="frmURL" name="url"
+                                                                                     required
+                                                                                     value="http://swungover.wordpress.com/feed/" class="form-control"></label>
+    </div>
     <? wp_nonce_field('add-blog', 'wp_nonce'); ?>
-    <input type="submit" name="submit" value="Submit your blog"/>
+    <input type="submit" name="submit" value="Submit your blog" class="btn btn-default"/>
 
 </form>
 <?php if (isset($message) && count($mesage) > 0) { ?>
