@@ -1,9 +1,6 @@
 <?php
 
-$post_types = get_post_types( '', 'names' );
-
-
-if (! in_array('blog', $post_types)) {
+if (! in_array(get_post_types( '', 'names' ), $post_types)) {
     register_post_type('blog', array(
         'label' => 'Submitted Blog',
         'public' => true,
