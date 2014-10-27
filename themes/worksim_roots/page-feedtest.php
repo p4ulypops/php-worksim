@@ -45,11 +45,13 @@ usort($finalArray, function ($a, $b) {
 });
 ?>
 
-<h1><?= the_title(); ?></h1>
+<div class="well well-lg">
+    <h1><?= the_title(); ?></h1>
+    <?php if (have_posts()) : while (have_posts()) : the_post();
+        the_content();
+    endwhile; endif; ?>
+</div>
 
-<?php if (have_posts()) : while (have_posts()) : the_post();
-    the_content();
-endwhile; endif; ?>
 <?php if ($maxitems == 0) : ?>
     <p>We currently don't have any items - please check back later</p>
 <?php else : ?>
@@ -62,7 +64,6 @@ endwhile; endif; ?>
             </header>
             <?= $item['content'] ?>
         </article>
-
     <?php endforeach; ?>
 <?php endif; ?>
 <? wp_foot(); ?>

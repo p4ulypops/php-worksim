@@ -58,11 +58,12 @@ if (isset($_POST['submit'])) {
 
 ?>
 
-<h1><?= the_title(); ?></h1>
-
-<?php if (have_posts()) : while (have_posts()) : the_post();
-    the_content();
-endwhile; endif; ?>
+<div class="well well-lg">
+    <h1><?= the_title(); ?></h1>
+    <?php if (have_posts()) : while (have_posts()) : the_post();
+        the_content();
+    endwhile; endif; ?>
+</div>
 
 <form action="" method="POST" class="submitform" role="form">
     <div class="form-group"><label for="frmEmail">Your email address:</label> <input type="email" id="frmEmail"
