@@ -3,7 +3,6 @@
     Template Name: Blog Submission
 */
 
-wp_head();
 
 $message = [];
 
@@ -90,7 +89,3 @@ if (isset($_POST['submit'])) {
     </ul>
 <?php } ?>
 
-
-
-
-<?php wp_foot(); ?>

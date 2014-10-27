@@ -6,8 +6,6 @@ Template Name: View all feeds
 // Get RSS Feed(s)
 include_once(ABSPATH . WPINC . '/feed.php');
 
-wp_head();
-
 
 $the_query = new WP_Query(array('post_type' => array('blog'), 'publish' => 'Published'));
 if ($the_query->have_posts()) {
@@ -66,4 +64,3 @@ usort($finalArray, function ($a, $b) {
         </article>
     <?php endforeach; ?>
 <?php endif; ?>
-<? wp_foot(); ?>
