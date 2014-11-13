@@ -10,19 +10,25 @@ class shortcodes
     {
 
         $this->message = array();
+
+        if (isset($_POST['formAction']) && $_POST['formAction'] == 'submitBlog') {
+            $this->processForm();
+        }
     }
-/*
+
     function prettyMessages()
     {
         if (is_array($this->message)) {
-            $return = "<ul>";
+            $return = '';
             foreach ($this->message as $key => $value) {
-                $return .= "<li><strong>$key: </strong>$value</li>";
+                $return .= '<div class="alert alert-' . ($key == 'thanks' ? 'success' : 'danger') . '" role="alert"><strong>' . $key . ': </strong>' . $value . '</div>';
             }
-            $return .= "</ul>";
+
+
+            return $return;
         }
     }
-*/
+
 
     function signupForm()
     {
@@ -48,59 +54,76 @@ class shortcodes
             <? wp_nonce_field('add-blog', 'wp_nonce'); ?>
             <input type="submit" name="submit" value="Submit your blog" class="btn btn-default"/>
         </form>
+
+        <?= $this->prettyMessages() ?>
+
     <?
     }
 
     function processForm()
     {
-        if (isset($_POST['formAction']) && $_POST['formAction'] == 'submitBlog') {
 
-            if (
-                !isset($_POST['wp_nonce'])
-                || !wp_verify_nonce($_POST['wp_nonce'], 'add-blog')
-            ) {
+        if (
+            !isset($_POST['wp_nonce'])
+            || !wp_verify_nonce($_POST['wp_nonce'], 'add-blog')
+        ) {
 
-                $message['general'] = "Nonce is wrong";
+            $message['general'] = "Nonce is wrong";
 
-            } else {
+        } else {
 
-                // Email address
-                if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-                    $message['email'] = "Please provide valid email address";
-                }
-
-                // URL
-                if (!filter_var($_POST['url'], FILTER_VALIDATE_URL)) {
-                    $message['url'] = "Please provide valid URL";
-                }
-                if (empty($_POST['personname'])) {
-                    $message['personname'] = "Please let us know your name";
-                }
-
-                if (empty($message)) {
-                    $my_post = array(
-                        'post_title' => $_POST['personname'] . ' \'s blog',
-                        'post_type' => 'blog',
-                        'post_content' => '',
-                        'post_status' => 'draft'
-                    );
-
-                    // Insert the post into the database
-                    $post_id = wp_insert_post($my_post);
-
-                    if (!is_wp_error($post_id)) {
-                        update_post_meta($post_id, 'name', $_POST['name']);
-                        update_post_meta($post_id, 'email', $_POST['email']);
-                        update_post_meta($post_id, 'url', $_POST['url']);
-
-                        $message['thanks'] = "Thank you for submitting your blog";
-                    } else {
-                        $message[] = "<p><strong>Whoops</strong> There has been an error</p";
-                    }
-                }
-
+            // Email address
+            if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                $message['email'] = "Please provide valid email address";
             }
+
+            // URL
+            if (!filter_var($_POST['url'], FILTER_VALIDATE_URL)) {
+                $message['url'] = "Please provide valid URL";
+            }
+            if (empty($_POST['personname'])) {
+                $message['personname'] = "Please let us know your name";
+            }
+            // Does it already exist?
+            $tmpQuery = new WP_Query(
+                array(
+                    'meta_key' => 'url',
+                    'meta_value' => $_POST['url'],
+                    'post_type' => 'blog',
+                    'post_status' => array('draft', 'published')
+                )
+            );
+
+             if ($tmpQuery->have_posts()) {
+                $message['url'] = "That blog is already on the list, thanks anyway.";
+            }
+
+            if (empty($message)) {
+                $my_post = array(
+                    'post_title' => $_POST['personname'] . ' \'s blog',
+                    'post_type' => 'blog',
+                    'post_content' => '',
+                    'post_status' => 'draft'
+                );
+
+                // Insert the post into the database
+                $post_id = wp_insert_post($my_post);
+
+                if (!is_wp_error($post_id)) {
+                    update_post_meta($post_id, 'personname', $_POST['personname']);
+                    update_post_meta($post_id, 'email', $_POST['email']);
+                    update_post_meta($post_id, 'url', $_POST['url']);
+
+                    $message['thanks'] = "Thank you for submitting your blog";
+                } else {
+                    $message[] = "<p><strong>Whoops</strong> There has been an error</p>";
+                }
+            }
+
         }
+
+
+        $this->message = $message;
     }
 }
 
