@@ -1,6 +1,6 @@
 <?php
 
-if (! in_array(get_post_types( '', 'names' ), 'blog')) {
+if (! in_array('blog', get_post_types( '', 'names' ))) {
     register_post_type('blog', array(
         'label' => 'Submitted Blog',
         'public' => true,
@@ -13,7 +13,7 @@ if (! in_array(get_post_types( '', 'names' ), 'blog')) {
         'query_var' => true,
     ));
 }
-if (! in_array(get_post_types( '', 'names' ), 'blogEntery')) {
+if (! in_array('blogEntery', get_post_types( '', 'names' ))) {
     register_post_type('blogEntery', array(
         'label' => 'Submitted Blog Enteries',
         'public' => true,
