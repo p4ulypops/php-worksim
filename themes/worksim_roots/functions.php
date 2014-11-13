@@ -13,28 +13,29 @@
 define('WP_ENV', 'Development');
 
 $roots_includes = array(
-  'lib/utils.php',           // Utility functions
-  'lib/init.php',            // Initial theme setup and constants
-  'lib/wrapper.php',         // Theme wrapper class
-  'lib/sidebar.php',         // Sidebar class
-  'lib/config.php',          // Configuration
-  'lib/activation.php',      // Theme activation
-  'lib/titles.php',          // Page titles
-  'lib/nav.php',             // Custom nav modifications
-  'lib/gallery.php',         // Custom [gallery] modifications
-  'lib/comments.php',        // Custom comments modifications
-  'lib/scripts.php',         // Scripts and stylesheets
-  'lib/extras.php',          // Custom functions
-  'lib/setupBlogTypes.php',  // Paul's custom setup.
-    'lib/shortcodes.php'     // Shortcodes added.
+    'lib/utils.php',           // Utility functions
+    'lib/init.php',            // Initial theme setup and constants
+    'lib/wrapper.php',         // Theme wrapper class
+    'lib/sidebar.php',         // Sidebar class
+    'lib/config.php',          // Configuration
+    'lib/activation.php',      // Theme activation
+    'lib/titles.php',          // Page titles
+    'lib/nav.php',             // Custom nav modifications
+    'lib/gallery.php',         // Custom [gallery] modifications
+    'lib/comments.php',        // Custom comments modifications
+    'lib/scripts.php',         // Scripts and stylesheets
+    'lib/extras.php',          // Custom functions
+    'lib/setupBlogTypes.php',  // Paul's custom setup.
+    'lib/shortcodes.php',     // Shortcodes added.
+    'lib/blogGrabber.php'   // blog grabber
 );
 
 
 foreach ($roots_includes as $file) {
-  if (!$filepath = locate_template($file)) {
-    trigger_error(sprintf(__('Error locating %s for inclusion', 'roots'), $file), E_USER_ERROR);
-  }
+    if (!$filepath = locate_template($file)) {
+        trigger_error(sprintf(__('Error locating %s for inclusion', 'roots'), $file), E_USER_ERROR);
+    }
 
-  require_once $filepath;
+    require_once $filepath;
 }
 unset($file, $filepath);
