@@ -25,8 +25,8 @@ $roots_includes = array(
   'lib/comments.php',        // Custom comments modifications
   'lib/scripts.php',         // Scripts and stylesheets
   'lib/extras.php',          // Custom functions
-  'lib/setupBlogTypes.php'      // Paul's custom setup.
-
+  'lib/setupBlogTypes.php',  // Paul's custom setup.
+    'lib/shortcodes.php'     // Shortcodes added.
 );
 
 
