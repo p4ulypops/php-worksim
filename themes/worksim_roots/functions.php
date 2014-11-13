@@ -26,7 +26,9 @@ $roots_includes = array(
   'lib/scripts.php',         // Scripts and stylesheets
   'lib/extras.php',          // Custom functions
   'lib/setupBlogTypes.php'      // Paul's custom setup.
+
 );
+
 
 foreach ($roots_includes as $file) {
   if (!$filepath = locate_template($file)) {
