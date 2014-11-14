@@ -28,8 +28,10 @@
     if ($query->have_posts()) : ?>
 
         <ul>
-            <?php while ($query->have_posts()) : $query->the_post(); ?>
-                <li><a href="<? the_permalink(get_the_id()); ?>"><? the_title(); ?></a></li>
+            <?php while ($query->have_posts()) : $query->the_post();
+            global $post;
+                ?>
+                <li><a href="/blogentry/<?= sanitize_title( get_the_title());?> "><? the_title(); ?></a></li>
             <?php endwhile; ?>
         </ul>
         <?php wp_reset_postdata(); ?>

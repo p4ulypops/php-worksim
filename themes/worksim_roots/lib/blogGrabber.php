@@ -41,12 +41,13 @@ class blogGrabber
             array(
                 'meta_key' => 'posthash',
                 'meta_value' => $hash,
-                'post_type' => 'blogentery',
+                'post_type' => 'blogentry',
                 'post_status' => array('draft', 'publish')
             )
         );
 
-        if ($tmpQuery->have_posts()) {
+
+        if ($tmpQuery->found_posts > 0) {
             return true;
         }
 
@@ -86,9 +87,10 @@ class blogGrabber
         foreach ($current_rss_items as $item) {
 
             // build a hash
-            $post_hash = md5($item->get_title() . $item->get_date('Y-m-d H:i:s') . $blog_id);
+            $post_hash = md5($item->get_permalink() .  $blog_id);
             //    echo $post_hash."<br/>";
             //  print_r($item); exit();
+           // echo $post_hash;
             if (!$this->doesHashExist($post_hash)) {
                 $my_post = [
                     'post_title' => $item->get_title(),
@@ -99,14 +101,21 @@ class blogGrabber
                 ];
 
                 $post_id = wp_insert_post($my_post);
-                  echo print_r($post_id, true)." - ";
+                echo "Inserted post <b>".$post_id."</b> (".$item->get_title().") on blog $blog_id";
+
+                //  echo print_r($post_id, true)." - ";
                 if (!is_wp_error($post_id)) {
                     update_post_meta($post_id, 'posthash', $post_hash);
                     update_post_meta($post_id, 'blogParent', $blog_id);
                 }
 
+            } else {
+                echo "Hash already exists for <b>".$item->get_permalink()."</b> on blog <b>".$blog_id."</b>";
             }
+
+            echo "<br/>";
         }
+        echo "<hr/>";
     }
 }
 

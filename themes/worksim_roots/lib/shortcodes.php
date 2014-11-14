@@ -99,11 +99,21 @@ class shortcodes
             }
             $currentFeed = fetch_feed($_POST['url']);
             if (!is_wp_error($currentFeed)) {
-                $postData['title'] = $currentFeed->get_title();
-                $postData['desc'] = $currentFeed->get_description();
+                // Figure out how many total items there are, but limit it to 5.
+                $maxitems = $currentFeed->get_item_quantity( 10 );
 
+                // Build an array of all the items, starting with element 0 (first element).
+                $rss_items = $currentFeed->get_items( 0, $maxitems );
+               // exit($rss_items);
+
+                if ($maxitems == 0 ) {
+                    $message['Link'] = "Whoops, are you sure that's feed? There are no items";
+                }  else {
+                    $postData['title'] = $currentFeed->get_title();
+                    $postData['desc'] = $currentFeed->get_description();
+                }
             } else {
-                $message['error'] = "Can not find feed in your URL";
+                $message['error'] = "Can not find feed in your URL<br/><br/>".print_r($currentFeed, true);
             }
 
             if (empty($message)) {
@@ -111,7 +121,7 @@ class shortcodes
                     'post_title' => $postData['title'],
                     'post_type' => 'websites',
                     'post_content' => $postData['desc'],
-                    'post_status' => 'draft'
+                    'post_status' => 'publish'
                 );
 
                 // Insert the post into the database
