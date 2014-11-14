@@ -89,7 +89,7 @@ class shortcodes
                 array(
                     'meta_key' => 'url',
                     'meta_value' => $_POST['url'],
-                    'post_type' => 'blog',
+                    'post_type' => 'websites',
                     'post_status' => array('draft', 'published')
                 )
             );
@@ -97,12 +97,20 @@ class shortcodes
              if ($tmpQuery->have_posts()) {
                 $message['url'] = "That blog is already on the list, thanks anyway.";
             }
+            $currentFeed = fetch_feed($_POST['url']);
+            if (!is_wp_error($currentFeed)) {
+                $postData['title'] = $currentFeed->get_title();
+                $postData['desc'] = $currentFeed->get_description();
+
+            } else {
+                $message['error'] = "Can not find feed in your URL";
+            }
 
             if (empty($message)) {
                 $my_post = array(
-                    'post_title' => $_POST['personname'] . ' \'s blog',
-                    'post_type' => 'blog',
-                    'post_content' => '',
+                    'post_title' => $postData['title'],
+                    'post_type' => 'websites',
+                    'post_content' => $postData['desc'],
                     'post_status' => 'draft'
                 );
 
@@ -114,7 +122,7 @@ class shortcodes
                     update_post_meta($post_id, 'email', $_POST['email']);
                     update_post_meta($post_id, 'url', $_POST['url']);
 
-                    $message['thanks'] = "Thank you for submitting your blog";
+                    $message['thanks'] = "Thank you for submitting your blog (".$postData['title'].")";
                 } else {
                     $message[] = "<p><strong>Whoops</strong> There has been an error</p>";
                 }

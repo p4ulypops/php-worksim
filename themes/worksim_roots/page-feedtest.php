@@ -7,7 +7,7 @@ Template Name: View all feeds
 include_once(ABSPATH . WPINC . '/feed.php');
 
 
-$the_query = new WP_Query(array('post_type' => array('blog'), 'publish' => 'Published'));
+$the_query = new WP_Query(array('post_type' => array('submitted'), 'publish' => 'Published'));
 if ($the_query->have_posts()) {
 
     while ($the_query->have_posts()) {
