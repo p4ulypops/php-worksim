@@ -39,10 +39,9 @@ class blogGrabber
     {
         $tmpQuery = new WP_Query(
             array(
-                'meta_key' => 'posthash',
+                'meta_key' => 'thehash',
                 'meta_value' => $hash,
-                'post_type' => 'blogentry',
-                'post_status' => array('draft', 'publish')
+                'post_type' => 'blogentry'
             )
         );
 
@@ -71,9 +70,6 @@ class blogGrabber
     {
 
         $currentFeed = fetch_feed($url);
-
-       // print_r($currentFeed);
-       // exit();
 
         if (!is_wp_error($currentFeed)) {
             $maxitems = $currentFeed->get_item_quantity(10);
@@ -105,8 +101,8 @@ class blogGrabber
 
                 //  echo print_r($post_id, true)." - ";
                 if (!is_wp_error($post_id)) {
-                    update_post_meta($post_id, 'posthash', $post_hash);
-                    update_post_meta($post_id, 'blogParent', $blog_id);
+                    update_post_meta($post_id, 'thehash', $post_hash);
+                    update_post_meta($post_id, 'blogowner', $blog_id);
                 }
 
             } else {

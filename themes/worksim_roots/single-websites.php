@@ -17,21 +17,33 @@
     <hr/>
     <h1>Read enteries on <?= get_the_title(); ?></h1>
     <?
-    $query = new WP_QUery(
-        array(
-            'post_type' => 'blogentery',
-            'meta_key' => 'blogParent',
-            'meta_value' => get_the_id(),
-        )
-    );
+    $blogID = get_the_id();
 
-    if ($query->have_posts()) : ?>
+    $args = [
+        'post_type'  => 'blogentry',
+        'meta_key'   => 'blogowner',
+        'orderby'    => 'meta_value_num',
+        'order'      => 'ASC',
+        'meta_query' => array(
+            array(
+                'key'     => 'blogowner',
+                'value'   => $blogID,
+                'compare' => 'IN',
+            ),
+        ),
+    ];
+
+
+    $query = new WP_Query($args);
+
+    ?>
+    <? if ($query->have_posts()) :  global $post; ?>
 
         <ul>
             <?php while ($query->have_posts()) : $query->the_post();
-            global $post;
+
                 ?>
-                <li><a href="/blogentry/<?= sanitize_title( get_the_title());?> "><? the_title(); ?></a></li>
+                <li><a href="/blogentry/<?= sanitize_title(get_the_title()); ?> "><? the_title(); ?></a></li>
             <?php endwhile; ?>
         </ul>
         <?php wp_reset_postdata(); ?>
